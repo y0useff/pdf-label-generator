@@ -3,12 +3,11 @@ import { useState } from 'react';
 import Select from 'react-select';
 import AsyncSelect from 'react-select/async';
 import makeAnimated from 'react-select/animated';
-import { ipcRenderer } from 'electron';
-
 
 import label_information from '../../label_information.json'
 
 export let selectedObject = {}
+import InputGroup from 'react-bootstrap/InputGroup';
 
 let batchNumber = ""
 
@@ -44,6 +43,9 @@ export default function Dropdown() {
         }
         selectedObject = option.value;
         selectedObject.batch_prefixes = batch_prefixes;
+        
+
+        window.electronAPI.setSheetRow(selectedObject); 
     };
 
     let batchArray = []
@@ -61,6 +63,9 @@ export default function Dropdown() {
             batchNumber = batchNumber + 0
         }
         batchNumber = batchNumber + julian_date;
+
+        window.electronAPI.setBatchNumber(batchNumber); 
+
     }
     
 
@@ -73,7 +78,6 @@ export default function Dropdown() {
     }
 
     return(
-    
         <div>
             <span> Select Description</span>
             <Select
@@ -81,6 +85,7 @@ export default function Dropdown() {
             value={selectedOption}
             onChange={handleChange}
             options={optionsArray}
+            description={{selectedOption}}
             />
 
             <span> Select Batch Prefix(s)</span>
@@ -93,6 +98,5 @@ export default function Dropdown() {
 
             <p>Batch Number: {batchNumber}</p>
         </div>
-
     )
 }

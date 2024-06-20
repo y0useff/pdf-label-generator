@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
-import Dropdown from './components/Dropdown.jsx'
-import Numberoflabels from './components/Numberoflabels.jsx'
+import Header from './components/Header.jsx';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
-const searchDescriptionNode = window.document.getElementById("searchDescription")
-const searchDescriptionNodeRoot = createRoot(searchDescriptionNode);
-searchDescriptionNodeRoot.render(<Dropdown />);
 
-const numberOfLabelsNode = window.document.getElementById("numberOfLabels")
-const numberOfLabelsNodeRoot = createRoot(numberOfLabelsNode);
-numberOfLabelsNodeRoot.render(<Numberoflabels />)
+const headerNode = window.document.getElementById("header")
+const headerNodeRoot = createRoot(headerNode);
+headerNodeRoot.render(<Header />);
+
+
+
 
 

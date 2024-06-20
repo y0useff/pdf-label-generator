@@ -1,9 +1,15 @@
 const { contextBridge, ipcRenderer } = require('electron')
 const {createRoot} = require('react-dom/client')
 
-contextBridge.exposeInMainWorld('versions', {
-  node: () => process.versions.node,
-  chrome: () => process.versions.chrome,
-  electron: () => process.versions.electron,
+contextBridge.exposeInMainWorld('electronAPI', {
+  setSheetRow: (option) => ipcRenderer.send('set-sheet-row', option),
+  setBatchNumber: (batchNumber) => ipcRenderer.send('set-batch-number', batchNumber),
+  setNumberOfRolls: (rolls) => ipcRenderer.send('set-rolls', rolls),
+  setNumberOfLabels: (labels) => ipcRenderer.send('set-labels', labels),
+  // previewPDF: () => ipcRenderer.invoke('preview-pdf')
+
+
+
+
   // we can also expose variables, not just functions
 })

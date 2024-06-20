@@ -30,16 +30,22 @@ body {
 
 #myInput:focus {outline: 3px solid #ddd;}
 
+
 .dropdown, .inp {
   position: relative;
   display: inline-block;
 }
 
+#header {
+  width: 700px;
+  height: 250px;
+}
+
+
 .inp {
-  width: 200px;
-  text-align: center;
+  width: 100%;
   padding: 14px 20px 12px 20px;
-  border-radius: 7%;
+  border-radius: 9%; 
 }
 
 .dropdown-content {
@@ -52,11 +58,19 @@ body {
   z-index: 1;
 }
 
+#labels {
+  margin-bottom: 20px;
+}
+
 .dropdown-content a {
   color: black;
   padding: 12px 16px;
   text-decoration: none;
   display: block;
+}
+
+.search-dropdown {
+  width: 80%;
 }
 
 

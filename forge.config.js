@@ -24,6 +24,7 @@ module.exports = {
       config: {},
     },
   ],
+
   plugins: [
     {
       name: '@electron-forge/plugin-auto-unpack-natives',
@@ -31,7 +32,8 @@ module.exports = {
     },
     {
       name: '@electron-forge/plugin-webpack',
-      config: {
+      config:  {
+        devContentSecurityPolicy: `default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;`,
         mainConfig: './webpack.main.config.js',
         renderer: {
           config: './webpack.renderer.config.js',
@@ -58,6 +60,6 @@ module.exports = {
       [FuseV1Options.EnableNodeCliInspectArguments]: false,
       [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: true,
       [FuseV1Options.OnlyLoadAppFromAsar]: true,
-    }),
+    })
   ],
 };
