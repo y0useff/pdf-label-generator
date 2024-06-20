@@ -4,58 +4,76 @@ const Jimp = require("jimp");
 const { text } = require('pdfkit');
 // const {ipcMain} = require('electron')
 
+const { createCanvas, loadImage } = require('canvas')
+
 const finalLabelInfo = {
-    description: "",
-    SKU: "",
-    batch_numbers: "",
-    roll_numbers: ""
+    description: "poop",
+    SKU: "fuck",
+    batch_numbers: "shit",
+    roll_numbers: "pop"
 
 }
 
+ipcMain.on('set-sheet-row', (event, option) => {
 
-// ipcMain.on('set-sheet-row', (event, option) => {
-//     finalLabelInfo.description = option["Description"]
-//     finalLabelInfo.sku = option["SKU"]
-// })
+    finalLabelInfo.description = option["Description"]
+    finalLabelInfo.sku = option["SKU"]
+})
 
 
-// ipcMain.on('set-batch-number', (event, batchNumber) => {
-//     finalLabelInfo.batch_number = batchNumber
-// })
+ipcMain.on('set-batch-number', (event, batchNumber) => {
+    finalLabelInfo.batch_number = batchNumber
+})
 
-// ipcMain.on('set-rolls', (event, option) => {
-//     finalLabelInfo.rolls = option
-// })
+ipcMain.on('set-rolls', (event, option) => {
+    finalLabelInfo.rolls = option
+})
 
-// ipcMain.on('set-labels', (event, option) => {
-//     finalLabelInfo.rolls = option
-// })
+ipcMain.on('set-labels', (event, option) => {
+    finalLabelInfo.rolls = option
+})
+
+// ipcMain.on('')
 
 
 
 async function writeOverTemplate(templateType) {
+
+    const canvas = createCanvas(400, 200)
+    const ctx = canvas.getContext('2d')
+
+    loadImage('templates/template-a.png').then((image) => {
+        ctx.drawImage(image, 0, 0)
+        ctx.font = '12px Impact'
+
+
     
-    const image = await Jimp.default.read(`C:/Users/Yousef/Desktop/Programming/pdf-label-generator/templates/template-${templateType}.png`)
-    Jimp.loadFont(Jimp.FONT_SANS_12_BLACK).then(async (font) => {
-        // load font from .fnt file
+    // const image = await Jimp.default.read(`C:/Users/Yousef/Desktop/Programming/pdf-label-generator/templates/template-${templateType}.png`)
+    // Jimp.loadFont(Jimp.FONT_SANS_12_BLACK).then(async (font) => {
+    //     // load font from .fnt file
 
         
         const description = finalLabelInfo.description;
-        image.print(font, 105, 2, description); // print description on template
+        ctx.fillText(description, 105, 2); // print description on template
 
         const SKU = finalLabelInfo.SKU;
-        image.print(font, 50, 35, SKU)
+        ctx.fillText(SKU, 50, 35)
 
         const batchNumber = finalLabelInfo.batch_numbers
-        image.print(font, 80, 75, batchNumber)
+        ctx.fillText(batchNumber, 80, 75)
 
         const rollNumbers = finalLabelInfo.roll_numbers
-        image.print(font, 65, 112, rollNumbers)
+        ctx.fillText(rollNumbers, 65, 112)
 
 
-        await image.writeAsync(`templates/template-${templateType}-new.png`)
-      });
-      return image;
+    //     await image.writeAsync(`templates/template-${templateType}-new.png`)
+    //   });
+    //   return image;
+    const el = '<img src="' + canvas.toDataURL() + '" />'
+    console.log(el)
+    return el;
+    })
+
 }
 // writeOverTemplate();
 

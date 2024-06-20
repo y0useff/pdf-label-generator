@@ -39,6 +39,7 @@
   "license": "MIT",
   "dependencies": {
     "bootstrap": "^5.3.3",
+    "canvas": "^2.11.2",
     "electron-squirrel-startup": "^1.0.1",
     "ffmpeg-static": "^5.2.0",
     "ffprobe-static": "^3.1.0",
