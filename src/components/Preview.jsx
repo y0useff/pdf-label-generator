@@ -1,9 +1,10 @@
 import * as React from 'react'
 import Button from 'react-bootstrap/Button';
+import { createRoot } from 'react-dom/client';
 
-function previewLabel() {
 
-}
+
+
 
 export default function Preview() {
 
@@ -12,7 +13,7 @@ export default function Preview() {
     // console.log(path)
     return (
         <>
-        <Button action onClick={previewLabel} variant="primary">Preview</Button>{' '}
+        <Button id="preview" action variant="primary">Preview</Button>{' '}
         </>
     )
 }

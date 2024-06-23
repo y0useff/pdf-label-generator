@@ -6,7 +6,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   setBatchNumber: (batchNumber) => ipcRenderer.send('set-batch-number', batchNumber),
   setNumberOfRolls: (rolls) => ipcRenderer.send('set-rolls', rolls),
   setNumberOfLabels: (labels) => ipcRenderer.send('set-labels', labels),
-  // previewPDF: () => ipcRenderer.invoke('preview-pdf')
+  previewPDF: () => ipcRenderer.invoke('preview-pdf')
 
 
 
