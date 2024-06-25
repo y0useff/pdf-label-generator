@@ -2,15 +2,14 @@ const fs = require('fs')
 const {PDFDocument, degrees} = require('pdf-lib')
 const {ipcMain, dialog,BrowserWindow} = require('electron')
 const e = require('express')
-const PDFWindow = require('electron-pdf-window-s').default
 
 const finalLabelInfo = {
     description: `8911 RY 39.75"x10,000 Ft. Roll`,
     SKU: "adsfasdfd",
     batch_number: "23222",
-    number_of_rolls: "10",
+    number_of_rolls: "",
     labels: "5",
-    template_style: "a"
+    template_style: "C"
 }
 
 
@@ -41,13 +40,7 @@ const finalLabelInfo = {
 
 
 
-//generates
-ipcMain.handle('generate-pdf', generateFullPDF)
-
-
 async function generateFullPDF() {
-
-    const savePath = "./templates/label.pdf"
 
     const pngImageBytes = await fs.readFileSync(`./templates/template-${finalLabelInfo.template_style}.png`, {encoding: 'base64'})
 
@@ -62,36 +55,90 @@ async function generateFullPDF() {
     for (let i = 1; i <= parseInt(finalLabelInfo.number_of_rolls); i++) {
         //for every label wtihin the roll
         for (let j= 1; j<= parseInt(finalLabelInfo.labels); j++) {
-            const page = pdfDoc.addPage([290,145]) //add a page (1 label)
+            const page = pdfDoc.addPage([330,165]) //add a page (1 label)
             page.drawImage(pngImage, {
-                width: 290,
-                height: 145
+                width: 330,
+                height: 165,
+                x: 20,
+                y: -10
             }) //draw the template
 
             //draw infomration, if template style is a.
             if (finalLabelInfo.template_style == 'A') {
                 page.drawText(finalLabelInfo.description, {
-                    size: 8,
-                    x: 80,
-                    y: 130,
+                    size: 12,
+                    x: 10 + 20,
+                    y: 125
                 })
             
                 page.drawText(finalLabelInfo.SKU, {
                     size: 12,
-                    x: 40,
-                    y: 108,
+                    x: 10 + 20,
+                    y: 105
                 })
             
                 page.drawText(finalLabelInfo.batch_number, {
                     size: 12,
-                    x: 60,
-                    y: 78,
+                    x: 60 + 20,
+                    y: 78
                 })
             
                 page.drawText(i.toString(), {
                     size: 12,
-                    x: 45,
-                    y: 50,
+                    x: 45 + 20,
+                    y: 50
+                })
+            }
+
+            if (finalLabelInfo.template_style == "B") {
+                page.drawText(finalLabelInfo.description, {
+                    size: 12,
+                    x: 5 + 20,
+                    y: 128,
+                })
+            
+                page.drawText(finalLabelInfo.SKU, {
+                    size: 12,
+                    x: 5 +20,
+                    y: 105 ,
+                })
+            
+                page.drawText(finalLabelInfo.batch_number, {
+                    size: 12,
+                    x: 60+20,
+                    y: 90,
+                })
+            
+                page.drawText(i.toString(), {
+                    size: 12,
+                    x: 45+20,
+                    y: 75 ,
+                })
+            }
+        
+            if (finalLabelInfo.template_style == "C") {
+                page.drawText(finalLabelInfo.description, {
+                    size: 12,
+                    x: 5 +20,
+                    y: 128,
+                })
+            
+                page.drawText(finalLabelInfo.SKU, {
+                    size: 12,
+                    x: 5+20,
+                    y: 105,
+                })
+            
+                page.drawText(finalLabelInfo.batch_number, {
+                    size: 12,
+                    x: 60 + 20,
+                    y: 60 ,
+                })
+            
+                page.drawText(i.toString(), {
+                    size: 12,
+                    x: 45 +20,
+                    y: 32 ,
                 })
             }
         }
@@ -128,16 +175,17 @@ async function generateFullPDF() {
         height: 600,
 
       });
-    
+      await pdfWin.webContents.openDevTools();
+      console.log(__dirname) //in dev C:\Users\Yousef\Desktop\Programming\pdf-label-generator\.webpack\main
+      await pdfWin.loadURL("/templates/label-preview.html");
       
-      pdfWin.loadURL("C:/Users/Yousef/Desktop/Programming/pdf-label-generator/templates/label-preview.html");
-    
-      // Open the DevTools.
-      pdfWin.webContents.openDevTools();
-
-    return pdfBytes;
+      //FIX GENERATION BUG
 }
 
+
+
+    //generates
+    ipcMain.on('generate-pdf', generateFullPDF)
 
     ipcMain.handle('preview-pdf', embedImageIntoPDF)
 
@@ -146,6 +194,7 @@ async function generateFullPDF() {
         finalLabelInfo.description = option["Description"]
         finalLabelInfo.SKU = option["SKU"]
         finalLabelInfo.template_style = option["Template Style"]
+        finalLabelInfo.labels = option["Labels per roll/cut?"]
     })
 
 
@@ -157,9 +206,6 @@ async function generateFullPDF() {
         finalLabelInfo.number_of_rolls = option
     })
 
-    ipcMain.on('set-labels', (event, option) => {
-        finalLabelInfo.labels = option
-    })
 
 
 async function embedImageIntoPDF() {
@@ -182,15 +228,15 @@ async function embedImageIntoPDF() {
     //for template a
     if (finalLabelInfo.template_style == 'A') {
         page.drawText(finalLabelInfo.description, {
-            size: 8,
-            x: 80,
-            y: 130,
+            size: 12,
+            x: 10,
+            y: 125,
         })
     
         page.drawText(finalLabelInfo.SKU, {
             size: 12,
-            x: 40,
-            y: 108,
+            x: 10,
+            y: 105,
         })
     
         page.drawText(finalLabelInfo.batch_number, {
@@ -205,11 +251,63 @@ async function embedImageIntoPDF() {
             y: 50,
         })
     }
-    
 
+    if (finalLabelInfo.template_style == "B") {
+        page.drawText(finalLabelInfo.description, {
+            size: 12,
+            x: 5,
+            y: 128,
+        })
+    
+        page.drawText(finalLabelInfo.SKU, {
+            size: 12,
+            x: 5,
+            y: 105,
+        })
+    
+        page.drawText(finalLabelInfo.batch_number, {
+            size: 12,
+            x: 60,
+            y: 90,
+        })
+    
+        page.drawText(finalLabelInfo.number_of_rolls, {
+            size: 12,
+            x: 45,
+            y: 75,
+        })
+    }
+
+    if (finalLabelInfo.template_style == "C") {
+        page.drawText(finalLabelInfo.description, {
+            size: 12,
+            x: 5,
+            y: 128,
+        })
+    
+        page.drawText(finalLabelInfo.SKU, {
+            size: 12,
+            x: 5,
+            y: 105,
+        })
+    
+        page.drawText(finalLabelInfo.batch_number, {
+            size: 12,
+            x: 60,
+            y: 60,
+        })
+    
+        page.drawText(finalLabelInfo.number_of_rolls, {
+            size: 12,
+            x: 45,
+            y: 32,
+        })
+    }
+    
+    const b = await pdfDoc.save()
     const pdfBytes = await pdfDoc.saveAsBase64({dataUri: true})
 
-    await fs.writeFileSync('./templates/label-preview.pdf', pdfBytes)
+    await fs.writeFileSync('./templates/label-preview.pdf', b)
 
     return pdfBytes
     

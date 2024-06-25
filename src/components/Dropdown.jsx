@@ -3,13 +3,56 @@ import { useState } from 'react';
 import Select from 'react-select';
 import AsyncSelect from 'react-select/async';
 import makeAnimated from 'react-select/animated';
+import CreatableSelect from 'react-select/creatable';
 
-import label_information from '../../label_information.json'
+import Papa from 'papaparse'
 
 export let selectedObject = {}
 import InputGroup from 'react-bootstrap/InputGroup';
 
 let batchNumber = ""
+
+import label_information from '../../data.csv'; 
+
+// const config = {
+// 	delimiter: ",",	// auto-detect
+// 	newline: "\n",	// auto-detect
+// 	quoteChar: `'`,
+// 	escapeChar: undefined,
+// 	header: false,
+// 	transformHeader: undefined,
+// 	dynamicTyping: false,
+// 	preview: 0,
+// 	encoding: "",
+// 	worker: false,
+// 	comments: false,
+// 	step: undefined,
+// 	complete: undefined,
+// 	error: undefined,
+// 	download: false,
+// 	downloadRequestHeaders: undefined,
+// 	downloadRequestBody: undefined,
+// 	skipEmptyLines: false,
+// 	chunk: undefined,
+// 	chunkSize: undefined,
+// 	fastMode: undefined,
+// 	beforeFirstChunk: undefined,
+// 	withCredentials: undefined,
+// 	transform: undefined,
+// 	delimitersToGuess: [',', '\t', '|', ';', Papa.RECORD_SEP, Papa.UNIT_SEP],
+// 	skipFirstNLines: 0
+// }
+// console.log(csv)
+
+// // // const csv_string = csv
+// // const results = Papa.parse(csv, config);
+
+// // console.log(results.data)
+
+// // let fileOutputName = '../../label_information.json'
+
+// import  from '../../label_information.json'
+
 
  
 export default function Dropdown() {
@@ -26,43 +69,51 @@ export default function Dropdown() {
 
     // console.log(optionsArray)
 
-    const [selectedOption, setSelectedOption] = useState(null);
+    const [selectedOption, setSelectedOption] = useState("");
+    const [selectedPrefix, setSelectedPrefix] = useState("");
+
     const handleChange = (option) => {
-        setSelectedPrefix("")
         setSelectedOption(option);
         let batch_prefixes = ((option.value)["Batch Prefix"]).toString()
         const isMultiple = batch_prefixes.indexOf(',')
+
+
         if (isMultiple > 0) {
             //if batch prefix is multiple items
-            batch_prefixes = batch_prefixes.split(',')
-            alert("enter text here")
+            batch_prefixes = batch_prefixes.split(',')  
+            selectedObject = option.value;
+            selectedObject.batch_prefixes = batch_prefixes;
+            handlePrefixChange({})
         }
-        else {
-            //if batch prefix isnt multiple items
+        else {            
+            selectedObject = option.value;
+            selectedObject.batch_prefixes = batch_prefixes;
+            handlePrefixChange({
+                value: batch_prefixes,
+                label: batch_prefixes
+            })
+        }
 
-        }
-        selectedObject = option.value;
-        selectedObject.batch_prefixes = batch_prefixes;
-        
+        window.electronAPI.setNumberOfLabels(((option.value)["Labels per roll/cut?"]).toString())
 
         window.electronAPI.setSheetRow(selectedObject); 
     };
 
     let batchArray = []
 
-    const [selectedPrefix, setSelectedPrefix] = useState(null);
 
     const handlePrefixChange = (option) => {
         setSelectedPrefix(option)
         batchNumber = ""
-        //=IF(F2<100,C2&D2&"0"&F2,C2&D2&F2)
         
+        if (option.value == undefined) return window.electronAPI.setBatchNumber(batchNumber);
+
         const julian_date = (selectedObject["Julian Date"])
         batchNumber = batchNumber + option.value + selectedObject["Year (last digit of current year)"];
-        if (julian_date < 100 || julian_date == undefined) {
+        if (julian_date < 100 || julian_date == undefined || julian_date == null) {
             batchNumber = batchNumber + 0
-        }
-        batchNumber = batchNumber + julian_date;
+        } else batchNumber = batchNumber + julian_date;
+
 
         window.electronAPI.setBatchNumber(batchNumber); 
 
@@ -89,7 +140,7 @@ export default function Dropdown() {
             />
 
             <span> Select Batch Prefix(s)</span>
-            <Select
+            <CreatableSelect
             className="search-dropdown"
             value={selectedPrefix}
             onChange={handlePrefixChange}

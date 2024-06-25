@@ -25,6 +25,15 @@ module.exports = [
         presets: ['@babel/preset-react']
       }
     }
+  },
+  {
+    test: /\.csv$/,
+    loader: 'csv-loader',
+    options: {
+      dynamicTyping: true,
+      header: true,
+      skipEmptyLines: true
+    }
   }
   // Put your webpack loader rules in this array.  This is where you would put
   // your ts-loader configuration for instance:

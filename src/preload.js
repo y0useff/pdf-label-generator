@@ -7,8 +7,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   setNumberOfRolls: (rolls) => ipcRenderer.send('set-rolls', rolls),
   setNumberOfLabels: (labels) => ipcRenderer.send('set-labels', labels),
   previewPDF: () => ipcRenderer.invoke('preview-pdf'),
-  generatePDF: () => ipcRenderer.invoke('generate-pdf'),
-  // openPDFWindow: (callback) => ipcRenderer.on('open-pdf-window', (_event, value) => callback(value))
+  generatePDF: () => ipcRenderer.send('generate-pdf'),
+  onUpdateLabels: (callback) => ipcRenderer.on('update-labels', (_event, value) => callback(value))
 
 
 
