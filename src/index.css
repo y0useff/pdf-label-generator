@@ -1,9 +1,10 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif;
-  margin: auto;
   max-width: 38rem;
   padding: 2rem;
+  text-align: center;
+  align-items: center;
 }
 
 .dropbtn {
@@ -38,13 +39,12 @@ body {
 
 #header {
   width: 700px;
-  height: 250px;
+  height: 200px;
 }
 
 
 .inp {
   width: 100%;
-  padding: 14px 20px 12px 20px;
   border-radius: 9%; 
 }
 
@@ -58,9 +58,20 @@ body {
   z-index: 1;
 }
 
-#labels {
-  margin-bottom: 20px;
+#labelPreview {
+  width: 500px;
+  height: 250px;
+  text-align: center;
+  margin-left: 90px;
+  margin-top: 20px;
 }
+
+iframe {
+  height: 100%;
+  width: 100%;
+}
+
+
 
 .dropdown-content a {
   color: black;
@@ -77,3 +88,9 @@ body {
 .dropdown a:hover {background-color: #ddd;}
 
 .show {display: block;}
+
+#rolls {
+  margin-top: 20px;
+}
+#labels {
+}

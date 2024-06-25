@@ -6,7 +6,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   setBatchNumber: (batchNumber) => ipcRenderer.send('set-batch-number', batchNumber),
   setNumberOfRolls: (rolls) => ipcRenderer.send('set-rolls', rolls),
   setNumberOfLabels: (labels) => ipcRenderer.send('set-labels', labels),
-  // previewPDF: () => ipcRenderer.invoke('preview-pdf')
+  previewPDF: () => ipcRenderer.invoke('preview-pdf'),
+  generatePDF: () => ipcRenderer.invoke('generate-pdf'),
+  // openPDFWindow: (callback) => ipcRenderer.on('open-pdf-window', (_event, value) => callback(value))
+
 
 
 
