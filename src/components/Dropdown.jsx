@@ -4,7 +4,7 @@ import Select from 'react-select';
 import AsyncSelect from 'react-select/async';
 import makeAnimated from 'react-select/animated';
 import CreatableSelect from 'react-select/creatable';
-
+import julian from 'julian'
 import Papa from 'papaparse'
 
 export let selectedObject = {}
@@ -108,14 +108,26 @@ export default function Dropdown() {
         
         if (option.value == undefined) return window.electronAPI.setBatchNumber(batchNumber);
 
-        const julian_date = (selectedObject["Julian Date"])
-        batchNumber = batchNumber + option.value + selectedObject["Year (last digit of current year)"];
-        if (julian_date < 100 || julian_date == undefined || julian_date == null) {
-            batchNumber = batchNumber + 0
-        } else batchNumber = batchNumber + julian_date;
+        let julian_date = 
+        ((Math.floor(julian(new Date()))).toString()).substring(2)
+        -
+        ((Math.floor(julian(new Date(2024, 0, 1)))).toString()).substring(2)
 
 
-        window.electronAPI.setBatchNumber(batchNumber); 
+        console.log(julian_date)
+        
+        // let julian_date = julian(new Date()) - julian(new Date(2024, 0, 1))
+        // julian_date = Math.floor(julian_date)
+        // julian_date = (julian_date.toString()).substring(2)
+
+        batchNumber = batchNumber + option.value + selectedObject["Year (last digit of current year)"] + julian_date;
+        
+        // if (julian_date < 100 || julian_date == undefined || julian_date == null) {
+        //     batchNumber = batchNumber + 0
+        // }
+
+
+        window.electronAPI.setBatchNumber(batchNumber)
 
     }
     

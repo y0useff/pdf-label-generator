@@ -20,7 +20,6 @@ const fs = require('fs')
 
 
 
-
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   app.quit();
@@ -43,11 +42,11 @@ const createWindow = () => {
   mainWindow.removeMenu()
   // Open the DevTools.
 
+  // mainWindow.webContents.openDevTools()
 
   ipcMain.on('set-labels', (event, option) => {
     mainWindow.webContents.send('update-labels', option)
 })
-mainWindow.webContents.openDevTools();
 
 };
 
