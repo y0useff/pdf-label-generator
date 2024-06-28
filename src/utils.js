@@ -15,7 +15,9 @@ const finalLabelInfo = {
     labels: "",
     template_style: ""
 }
-
+const log = require('electron-log/main')
+log.transports.console.format =`{h}:{i}:{s} {text}`
+log.info("initializing utils file")
 
 // getPrinters()
 //     .then((res) => {
@@ -227,18 +229,21 @@ const finalLabelInfo = {
 // const { BrowserWindow } = require('electron');
 
 async function generatePDF() {
+    log.info("begining pdf generation")
     try {
         const [pngImageBytes, fontBytes] = await Promise.all([
             fs.promises.readFile(`./templates/template-${finalLabelInfo.template_style}.png`),
-            fs.promises.readFile('C:/Windows/Fonts/arialbd.ttf')
+            fs.promises.readFile('C:/Windows/Fonts/arialbd.ttf'),
         ]);
 
         const pdfDoc = await PDFDocument.create();
+        log.info("creating pdf")
         pdfDoc.registerFontkit(fontkit);
+        log.info("registereing font")
         
         const [pngImage, arialFont] = await Promise.all([
             pdfDoc.embedPng(pngImageBytes),
-            pdfDoc.embedFont(fontBytes)
+            pdfDoc.embedFont(fontBytes),
         ]);
 
         const drawText = (page, text, x, y) => {
@@ -248,16 +253,19 @@ async function generatePDF() {
                 font: arialFont,
                 size: 14
             });
+            log.info(`writing ${text} on ${page}`)
         };
 
         for (let i = 1; i <= parseInt(finalLabelInfo.number_of_rolls); i++) {
             for (let j = 1; j <= parseInt(finalLabelInfo.labels); j++) {
                 const page = pdfDoc.addPage([330, 165]);
+                log.info("adding page")
                 page.drawImage(pngImage, {
                     width: 330,
                     height: 165,
                     y: finalLabelInfo.template_style === 'A' ? -20 : 0
                 });
+                log.info("drawing image")
 
                 drawText(page, finalLabelInfo.description, 7, 140);
                 drawText(page, finalLabelInfo.SKU, 7, finalLabelInfo.template_style === 'B' ? 125 : 105);
@@ -267,18 +275,23 @@ async function generatePDF() {
         }
 
         const pdfBytes = await pdfDoc.save();
+        log.info("saving pdf")
         const pdfLocation = path.join(process.resourcesPath, 'fully_generated.pdf');
+        log.info('joining path')
         await fs.promises.writeFile(pdfLocation, pdfBytes);
-
+        log.info('writing to pdf')
+        log.info("attempting to open new browser window")
         const pdfWin = new BrowserWindow({
             width: 800,
             height: 600
         });
-
+        log.info("browser window has been opened")
+        log.info("Attempting to open pdf file")
         await pdfWin.loadFile(pdfLocation);
+        log.info("pdf file has been opened")
 
     } catch (error) {
-        console.error('Error generating PDF:', error);
+        log.info('Error generating PDF:', error);
     }
 }
 
@@ -307,18 +320,18 @@ async function generatePDF() {
         finalLabelInfo.SKU = option["SKU"]
         finalLabelInfo.template_style = option["Template Style"]
         finalLabelInfo.labels = option["Labels per roll/cut?"]
-        console.log("initial info set")
+        log.info("initial info set")
     })
 
 
     ipcMain.on('set-batch-number', (event, batchNumber) => {
         finalLabelInfo.batch_number = batchNumber
-        console.log("batch # set")
+        log.info("batch # set")
     })
 
     ipcMain.on('set-rolls', (event, option) => {
         finalLabelInfo.number_of_rolls = option
-        console.log("rolls set")
+        log.info("rolls set")
     })
 
 

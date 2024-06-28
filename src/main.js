@@ -16,8 +16,9 @@
 const { app, BrowserWindow, dialog, ipcMain} = require('electron');
 const path = require('node:path');
 const fs = require('fs')
-
-
+const log = require('electron-log/main')
+log.transports.console.format =`{h}:{i}:{s} {text}`
+log.info("program beginning")
 
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -34,18 +35,23 @@ const createWindow = () => {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
   });
+  log.info("creating window")
+
 
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  log.info("loading main html file")
 
 
   mainWindow.removeMenu()
+  log.info("removing top bar")
   // Open the DevTools.
 
   // mainWindow.webContents.openDevTools()
 
   ipcMain.on('set-labels', (event, option) => {
     mainWindow.webContents.send('update-labels', option)
+    log.info("updating label information")
 })
 
 };
@@ -55,9 +61,9 @@ const createWindow = () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
-
+  log.info("app is read")
   createWindow();
-
+  log.info("window has been created")
 
 
   // On OS X it's common to re-create a window in the app when the
