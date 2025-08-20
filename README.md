@@ -1,4 +1,4 @@
-# PDF Label Generator 🏷️
+# Manufacturing Client Label Generation🏷️
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
 ![Electron](https://img.shields.io/badge/Electron-47848F?style=flat&logo=electron&logoColor=white)
