@@ -1,11 +1,11 @@
-# Manufacturing Client Label Creator 🏷️
+# PDF Label Generator 🏷️
 
-![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white)
 ![Electron](https://img.shields.io/badge/Electron-47848F?style=flat&logo=electron&logoColor=white)
 ![PDF](https://img.shields.io/badge/PDF-Generation-red)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-A custom desktop application developed with **Electron and Python** as a freelance project for a manufacturing client. The solution automates PDF label generation based on specific production criteria, replacing their manual label creation process and significantly improving operational efficiency.
+A custom desktop application developed with **Electron and Node.js** as a freelance project for a manufacturing client. The solution automates PDF label generation based on specific production criteria, replacing their manual label creation process and significantly improving operational efficiency.
 
 ## Features
 
@@ -28,7 +28,7 @@ This project was developed as a **custom software solution** for a manufacturing
 
 ### Solution Delivered
 - **Desktop Application**: Built with Electron for cross-platform compatibility
-- **Python Backend**: Robust PDF generation and data processing engine
+- **Node.js Backend**: Robust PDF generation and data processing engine
 - **User-Friendly Interface**: Intuitive GUI for non-technical staff
 - **Automated Workflow**: Eliminated manual design work entirely  
 - **Production Integration**: Seamless fit into existing manufacturing processes
@@ -52,14 +52,7 @@ This project was developed as a **custom software solution** for a manufacturing
 
 Labels are generated based on criteria such as:
 
-```python
-label_criteria = {
-    "product_type": "electronics",
-    "batch_size": 1000,
-    "production_date": "2024-08-19",
-    "quality_grade": "A"
-}
-```
+
 
 ## Technical Details
 
@@ -67,8 +60,8 @@ label_criteria = {
 ```
 ├── main.js                # Electron main process
 ├── renderer/             # Frontend interface
-├── python/               # Backend PDF generation
-│   ├── label_generator.py
+├── src/                  # Node.js backend
+│   ├── label_generator.js
 │   └── utils/
 ├── templates/            # Label templates
 └── config/              # Configuration files
